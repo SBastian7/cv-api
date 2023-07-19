@@ -1,0 +1,356 @@
+openapi: 3.0.0
+info:
+  title: My Professional Profile Web Application API
+  description: Documentation for the API endpoints of the Professional Profile Web Application
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:3000
+paths:
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: OK
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+  /users/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+  /users/login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+  /users/{id}:
+    put:
+      summary: Update a user by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /users/{id}:
+    delete:
+      summary: Delete a user by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /skills:
+    get:
+      summary: Get all skills
+      responses:
+        '200':
+          description: OK
+  /skills/{id}:
+    get:
+      summary: Get a skill by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+  /skills:
+    post:
+      summary: Create a new skill
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+      responses:
+        '201':
+          description: Created
+  /skills/{id}:
+    put:
+      summary: Update a skill by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /skills/{id}:
+    delete:
+      summary: Delete a skill by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /projects:
+    get:
+      summary: Get all projects
+      responses:
+        '200':
+          description: OK
+  /projects/{id}:
+    get:
+      summary: Get a project by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+  /projects:
+    post:
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          description: Created
+  /projects/{id}:
+    put:
+      summary: Update a project by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /projects/{id}:
+    delete:
+      summary: Delete a project by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /education:
+    get:
+      summary: Get all education entries
+      responses:
+        '200':
+          description: OK
+  /education/{id}:
+    get:
+      summary: Get an education entry by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+  /education:
+    post:
+      summary: Create a new education entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Education'
+      responses:
+        '201':
+          description: Created
+  /education/{id}:
+    put:
+      summary: Update an education entry by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Education'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /education/{id}:
+    delete:
+      summary: Delete an education entry by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        name:
+          type: string
+        about:
+          type: string
+      required:
+        - email
+        - password
+    Skill:
+      type: object
+      properties:
+        user_id:
+          type: string
+        name:
+          type: string
+        experience_level:
+          type: string
+      required:
+        - user_id
+        - name
+    Project:
+      type: object
+      properties:
+        user_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+      required:
+        - user_id
+        - title
+    Education:
+      type: object
+      properties:
+        user_id:
+          type: string
+        degree:
+          type: string
+        institution:
+          type: string
+        major:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+      required:
+        - user_id
+        - degree
+        - institution
+        - major
+        - start_date
