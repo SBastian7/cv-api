@@ -1,23 +1,21 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
 
 // Create a new SQLite database instance
-const dbPath = path.resolve(__dirname, '../data/cv.db');
+const dbPath = path.resolve(__dirname, "../data/cv.db");
 const db = new sqlite3.Database(dbPath);
 
 // Create the User table
 db.run(`
-  CREATE TABLE IF NOT EXISTS User (
-    id TEXT PRIMARY KEY,
-    username TEXT NOT NULL,
-    password TEXT NOT NULL,
-    email TEXT NOT NULL,
-    full_name TEXT,
-    bio TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`);
+    CREATE TABLE IF NOT EXISTS User (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL,
+      about TEXT,
+      isAdmin INTEGER DEFAULT 0
+    )
+  `);
 
 // Create the Project table
 db.run(`

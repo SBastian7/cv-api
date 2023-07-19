@@ -1,53 +1,71 @@
-const db = require("../config/database");
+const db = require('../config/database');
+const { v4: uuidv4 } = require('uuid');
 
 class User {
-  static getAllUsers(callback) {
-    db.all("SELECT * FROM User", (err, rows) => {
-      if (err) {
-        console.error(err);
-        callback(err, null);
-      } else {
-        callback(null, rows);
-      }
-    });
-  }
-
-  static getUserById(id, callback) {
-    db.get("SELECT * FROM User WHERE id = ?", [id], (err, row) => {
-      if (err) {
-        console.error(err);
-        callback(err, null);
-      } else {
-        callback(null, row);
-      }
-    });
-  }
-
+  // Create a new user
   static createUser(user, callback) {
-    const { username, password, email, full_name, bio } = user;
+    const { username, email, password, isAdmin } = user;
+    const id = uuidv4(); // Generate a new UUID v4 for the user
     db.run(
-      "INSERT INTO User (username, password, email, full_name, bio) VALUES (?, ?, ?, ?, ?)",
-      [username, password, email, full_name, bio],
+      'INSERT INTO User (id, username, email, password, isAdmin) VALUES (?, ?, ?, ?, ?)',
+      [id, username, email, password, isAdmin ? 1 : 0],
       function (err) {
         if (err) {
           console.error(err);
           callback(err, null);
         } else {
-          callback(null, this.lastID);
+          callback(null, id); // Use the generated UUID v4 as the user ID
         }
       }
     );
   }
 
-  static updateUser(id, user, callback) {
-    const { username, password, email, full_name, bio } = user;
+  // Get all users
+  static getAllUsers(callback) {
+    db.all('SELECT * FROM User', (err, users) => {
+      if (err) {
+        console.error(err);
+        callback(err, null);
+      } else {
+        callback(null, users);
+      }
+    });
+  }
+
+  // Get a user by ID
+  static getUserById(id, callback) {
+    db.get('SELECT * FROM User WHERE id = ?', [id], (err, user) => {
+      if (err) {
+        console.error(err);
+        callback(err, null);
+      } else {
+        callback(null, user);
+      }
+    });
+  }
+
+  // Get a user by email
+  static getUserByEmail(email, callback) {
+    db.get('SELECT * FROM User WHERE email = ?', email, (err, user) => {
+      if (err) {
+        console.error(err);
+        callback(err, null);
+      } else {
+        callback(null, user);
+      }
+    });
+  }
+
+  // Update a user by ID
+  static updateUser(id, updatedUser, callback) {
+    const { name, email, password, isAdmin } = updatedUser;
     db.run(
-      "UPDATE User SET username = ?, password = ?, email = ?, full_name = ?, bio = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-      [username, password, email, full_name, bio, id],
+      'UPDATE User SET name = ?, email = ?, password = ?, isAdmin = ? WHERE id = ?',
+      [name, email, password, isAdmin ? 1 : 0, id],
       (err) => {
         if (err) {
           console.error(err);
-          callback(err, null);
+          callback(err);
         } else {
           callback(null);
         }
@@ -55,11 +73,12 @@ class User {
     );
   }
 
+  // Delete a user by ID
   static deleteUser(id, callback) {
-    db.run("DELETE FROM User WHERE id = ?", [id], (err) => {
+    db.run('DELETE FROM User WHERE id = ?', [id], (err) => {
       if (err) {
         console.error(err);
-        callback(err, null);
+        callback(err);
       } else {
         callback(null);
       }

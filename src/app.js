@@ -1,16 +1,25 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
+
 const errorMiddleware = require('./middlewares/errorMiddleware');
+
 
 
 // Import routes
 const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const skillRoutes = require('./routes/skillRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const docsRouter = require('./routes/documentationRoutes');
 const educationRoutes = require('./routes/educationRoutes');
+
+// View Engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Middleware
 app.use(cors());
@@ -18,9 +27,15 @@ app.use(express.json());
 app.use(errorMiddleware);
 app.use(morgan('combined'));
 
+// Parse incoming requests with JSON payloads
+app.use(bodyParser.json());
+// Parse incoming requests with urlencoded payloads
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // Routes
 app.use('/docs', docsRouter);
 app.use('/users', userRoutes);
+app.use('/admin', adminRoutes);
 app.use('/skills', skillRoutes);
 app.use('/projects', projectRoutes);
 app.use('/education', educationRoutes);
