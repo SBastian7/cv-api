@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const dotenv = require('dotenv');
 const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
@@ -12,10 +13,10 @@ const errorMiddleware = require('./middlewares/errorMiddleware');
 // Import routes
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const skillRoutes = require('./routes/skillRoutes');
-const projectRoutes = require('./routes/projectRoutes');
+const productRoutes = require('./routes/productRoutes');
 const docsRouter = require('./routes/documentationRoutes');
-const educationRoutes = require('./routes/educationRoutes');
+
+dotenv.config();
 
 // View Engine
 app.set('view engine', 'ejs');
@@ -36,15 +37,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/docs', docsRouter);
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
-app.use('/skills', skillRoutes);
-app.use('/projects', projectRoutes);
-app.use('/education', educationRoutes);
-
+app.use('/products', productRoutes);
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Internal Server Error' });
-});
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ error: 'Internal Server Error' });
+// });
 
 module.exports = app;

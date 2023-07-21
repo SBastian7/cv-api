@@ -71,40 +71,36 @@ class UserController {
   // Admin Login
   static loginAdmin(req, res) {
     const { email, password } = req.body;
+    if (!email) {
+      return res.status(500).json({ error: 'Email is required' });
+    }
+    if (!password) {
+      return res.status(500).json({ error: 'Password is required'});
+    }
     
     // Check if the email exists in the database
-    User.getUserByEmail(email, (err, user) => {
+    User.getUserByEmail(email, async (err, user) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
-      
-      if (!user || !user.isAdmin) {
+
+      if (!(user || user.isAdmin)) {
         // Admin not found or not an admin user
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: 'Credenciales incorrectas.' });
+      }
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordMatch) {
+        return res.status(401).json({ error: 'Credenciales incorrectas.' });
       }
 
-      // Compare the password with the hashed password in the database
-      bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ error: 'Internal Server Error' });
-        }
-
-        if (!isMatch) {
-          // Password doesn't match
-          return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
-        // Create a JWT token for admin authentication
-        const token = jwt.sign({ id: user.id, isAdmin: true }, secretKey, {
-          expiresIn: '1h', // Set the token expiration time (e.g., 1 hour)
-        });
-
-        // Send the token in the response
-        // res.json({ token });
-        res.redirect('/admin/dashboard')
+      const token = jwt.sign({ id: user.id, isAdmin: true }, secretKey, {
+        expiresIn: '24h', // Set the token expiration time (e.g., 1 hour)
       });
+
+      // Send the token in the response
+      res.json({ token });
     });
   }
 }

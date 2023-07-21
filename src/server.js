@@ -1,6 +1,6 @@
 const app = require('./app');
 const db = require('./config/database');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4200;
 
 // Start the server
 db.run('PRAGMA foreign_keys = ON', (err) => {

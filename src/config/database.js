@@ -17,44 +17,14 @@ db.run(`
     )
   `);
 
-// Create the Project table
-db.run(`
-  CREATE TABLE IF NOT EXISTS Project (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    title TEXT NOT NULL,
-    description TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES User (id)
-  )
-`);
+  // Create the Product table
+db.run(`CREATE TABLE IF NOT EXISTS Product (
+  id TEXT PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  quantity INTEGER NOT NULL,
+  price REAL NOT NULL
+)`);
 
-// Create the Skill table
-db.run(`
-  CREATE TABLE IF NOT EXISTS Skill (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    name TEXT NOT NULL,
-    experience_level TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES User (id)
-  )
-`);
-
-// Create the Education table
-db.run(`
-  CREATE TABLE IF NOT EXISTS Education (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    degree TEXT NOT NULL,
-    institution TEXT NOT NULL,
-    major TEXT,
-    start_date DATE NOT NULL,
-    end_date DATE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES User (id)
-  )
-`);
 
 module.exports = db;

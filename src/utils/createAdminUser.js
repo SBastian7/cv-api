@@ -5,25 +5,21 @@ const db = require('../config/database');
 const adminUser = {
   username: 'admin',
   email: 'sebastn.molina@gmail.com',
-  password: 'Mok.2023*AFF', // Replace this with a secure password
+  password: 'Mok.2022!', // Replace this with a secure password
   isAdmin: true,
 };
 
 // Check if the admin user already exists
-db.get('SELECT * FROM User WHERE email = ? AND isAdmin = 1', [adminUser.email], (err, existingAdminUser) => {
+db.get('SELECT * FROM User WHERE email = ? AND isAdmin = 1', [adminUser.email], async (err, existingAdminUser) => {
   if (err) {
     console.error(err);
     process.exit(1);
   }
   // If the admin user doesn't exist, create it
   if (!existingAdminUser) {
-    bcrypt.hash(adminUser.password, 10, (err, hashedPassword) => {
-      if (err) {
-        console.error(err);
-        process.exit(1);
-      }
+    bcrypt.genSalt(10, async (err, salt) => {
+      const hashedPassword = await bcrypt.hash(adminUser.password, salt);
 
-      // Create the admin user with the hashed password
       const newAdminUser = {
         ...adminUser,
         password: hashedPassword,
@@ -36,8 +32,8 @@ db.get('SELECT * FROM User WHERE email = ? AND isAdmin = 1', [adminUser.email], 
         }
         console.log('Admin user created successfully.');
         process.exit(0);
-      });
-    });
+      });   
+    })
   } else {
     console.log('Admin user already exists.');
     process.exit(0);
