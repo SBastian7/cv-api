@@ -1,8 +1,8 @@
 class Product {
-    constructor(id, name, description, quantity, price) {
+    constructor(id, name, category, quantity, price) {
       this.id = id;
       this.name = name;
-      this.description = description;
+      this.category = category;
       this.quantity = quantity;
       this.price = price;
     }
@@ -17,7 +17,7 @@ class Product {
     }
   
     getDescription() {
-      return this.description;
+      return this.category;
     }
   
     getQuantity() {
@@ -33,8 +33,8 @@ class Product {
       this.name = name;
     }
   
-    setDescription(description) {
-      this.description = description;
+    setDescription(category) {
+      this.category = category;
     }
   
     setQuantity(quantity) {

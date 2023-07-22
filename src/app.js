@@ -15,6 +15,7 @@ const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const productRoutes = require('./routes/productRoutes');
 const docsRouter = require('./routes/documentationRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use('/docs', docsRouter);
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
 app.use('/products', productRoutes);
+app.use('/category', categoryRoutes);
 
 // Error handling middleware
 // app.use((err, req, res, next) => {
