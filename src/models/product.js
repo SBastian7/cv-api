@@ -1,53 +1,35 @@
-class Product {
-    constructor(id, name, category, quantity, price) {
-      this.id = id;
-      this.name = name;
-      this.category = category;
-      this.quantity = quantity;
-      this.price = price;
-    }
-  
-    // Getter methods
-    getId() {
-      return this.id;
-    }
-  
-    getName() {
-      return this.name;
-    }
-  
-    getDescription() {
-      return this.category;
-    }
-  
-    getQuantity() {
-      return this.quantity;
-    }
-  
-    getPrice() {
-      return this.price;
-    }
-  
-    // Setter methods
-    setName(name) {
-      this.name = name;
-    }
-  
-    setDescription(category) {
-      this.category = category;
-    }
-  
-    setQuantity(quantity) {
-      this.quantity = quantity;
-    }
-  
-    setPrice(price) {
-      this.price = price;
-    }
-  
-    // Other methods, if needed
-    // For example, you might add methods for validation or formatting here
-  }
-  
-  module.exports = Product;
-  
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/database'); // Assuming you've already set up the Sequelize instance
+
+const Category = require('./Category'); // Import the Category model
+
+const Product = sequelize.define('Product', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+  },
+  quantity: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  price: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+});
+
+// Define the association between Product and Category
+Product.belongsTo(Category, {
+  foreignKey: 'categoryId',
+  onDelete: 'CASCADE',
+});
+
+module.exports = Product;

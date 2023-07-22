@@ -1,16 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { CategoryController } = require('../controllers/CategoryController');
-const authenticateToken = require('../utils/authenticateToken');
+const CategoryController = require('../controllers/categoryController');
 
-router.post('/', authenticateToken, CategoryController.createCategory);
+// Route to create a new Category item
+router.post('/', CategoryController.createCategory);
 
-router.get('/', authenticateToken, CategoryController.getAllCategories);
+// Route to get all Category items
+router.get('/', CategoryController.getAllCategories);
 
-router.get('/:id', authenticateToken, CategoryController.getCategory);
+// Route to get a specific Category item by ID
+router.get('/:id', CategoryController.getCategory);
 
-router.put('/:id', authenticateToken, CategoryController.updateCategory);
+// Route to update an existing Category item
+router.put('/:id', CategoryController.updateCategory);
 
-router.delete('/:id', authenticateToken, CategoryController.deleteCategory);
+// Route to delete an existing Category item
+router.delete('/:id', CategoryController.deleteCategory);
 
 module.exports = router;

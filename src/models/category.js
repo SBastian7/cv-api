@@ -1,23 +1,16 @@
-class Category {
-  constructor(id, name, category, quantity, price) {
-    this.id = id;
-    this.name = name;
-  }
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/database'); // Assuming you've already set up the Sequelize instance
 
-  // Getter methods
-  getId() {
-    return this.id;
-  }
-
-  getName() {
-    return this.name;
-  }
-
-  // Setter methods
-  setName(name) {
-    this.name = name;
-  }
-
-}
+const Category = sequelize.define('Category', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
 module.exports = Category;

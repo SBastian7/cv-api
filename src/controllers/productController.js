@@ -1,94 +1,112 @@
-const Product = require("../models/product");
-const generateUUIDv4 = require("../utils/generateUUIDv4");
+const Product = require('../models/Product');
 
 class ProductController {
-  static productItems = [];
+  // Static method to create a new Product item
+  static async createProduct(req, res) {
+    try {
+      const { name, description, quantity, price, categoryId } = req.body;
 
-  static createProduct(req, res) {
-    const { name, description, quantity, price } = req.body;
+      if (!name) {
+        return res.status(400).json({ error: "Name is a required field" });
+      }
+      if (!quantity) {
+        return res.status(400).json({ error: "Quantity is a required field" });
+      }
+      if (!price) {
+        return res.status(400).json({ error: "Price is a required field" });
+      }
+      if (!categoryId) {
+        return res.status(400).json({ error: "Category is a required field" });
+      }
 
-    if (!name) {
-      return res.status(400).json({ error: "Nombre es un campo requerido" });
+      const newProduct = await Product.create({
+        name,
+        description,
+        quantity,
+        price,
+        categoryId,
+      });
+
+      res.status(201).json(newProduct);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-    if (!quantity) {
-      return res.status(400).json({ error: "Cantidad es un campo requerido" });
-    }
-    if (!price) {
-      return res.status(400).json({ error: "Precio es un campo requerido" });
-    }
-    // Generate a unique ID (You can use UUID or any other ID generation mechanism here)
-    const id = generateUUIDv4();
-
-    const newItem = new Product(id, name, description, quantity, price);
-    ProductController.productItems.push(newItem);
-
-    res.status(201).json(newItem);
   }
 
-  static getAllProducts(req, res) {
-    console.log("---> getting prods ", ProductController)
-    res.status(200).json(ProductController.productItems);
+  // Static method to get all Product items
+  static async getAllProducts(req, res) {
+    try {
+      const products = await Product.findAll();
+      res.status(200).json(products);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
-  static getProduct(req, res) {
-    const itemId = req.params.id;
-    const item = ProductController.productItems.find(
-      (item) => item.getId() === itemId
-    );
+  // Static method to get a specific Product item by ID
+  static async getProduct(req, res) {
+    try {
+      const productId = req.params.id;
+      const product = await Product.findByPk(productId);
 
-    if (!item) {
-      return res.status(404).json({ error: "Product item not found." });
+      if (!product) {
+        return res.status(404).json({ error: "Product item not found." });
+      }
+
+      res.status(200).json(product);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    res.status(200).json(item);
   }
 
-  static updateProduct(req, res) {
-    const itemId = req.params.id;
-    const item = ProductController.productItems.find(
-      (item) => item.getId() === itemId
-    );
+  // Static method to update an existing Product item
+  static async updateProduct(req, res) {
+    try {
+      const productId = req.params.id;
+      const product = await Product.findByPk(productId);
 
-    if (!item) {
-      return res.status(404).json({ error: "Product item not found." });
+      if (!product) {
+        return res.status(404).json({ error: "Product item not found." });
+      }
+
+      const { name, description, quantity, price, categoryId } = req.body;
+
+      await product.update({
+        name,
+        description,
+        quantity,
+        price,
+        categoryId,
+      });
+
+      res.status(200).json(product);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    const { name, description, quantity, price } = req.body;
-
-    if (name) {
-      item.setName(name);
-    }
-
-    if (description) {
-      item.setDescription(description);
-    }
-
-    if (quantity) {
-      item.setQuantity(quantity);
-    }
-
-    if (price) {
-      item.setPrice(price);
-    }
-
-    res.status(200).json(item);
   }
 
-  static deleteProduct(req, res) {
-    const itemId = req.params.id;
-    const index = ProductController.productItems.findIndex(
-      (item) => item.getId() === itemId
-    );
+  // Static method to delete an existing Product item
+  static async deleteProduct(req, res) {
+    try {
+      const productId = req.params.id;
+      const product = await Product.findByPk(productId);
 
-    if (index === -1) {
-      return res.status(404).json({ error: "Product item not found." });
+      if (!product) {
+        return res.status(404).json({ error: "Product item not found." });
+      }
+
+      await product.destroy();
+
+      res.status(200).json(product);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    const deletedItem = ProductController.productItems.splice(index, 1);
-    res.status(200).json(deletedItem[0]);
   }
 }
 
-module.exports = {
-  ProductController,
-};
+module.exports = ProductController;

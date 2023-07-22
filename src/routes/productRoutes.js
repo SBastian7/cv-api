@@ -1,16 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { ProductController } = require('../controllers/productController');
-const authenticateToken = require('../utils/authenticateToken');
+const ProductController = require('../controllers/productController');
 
-router.post('/', authenticateToken, ProductController.createProduct);
+// Route to create a new Product item
+router.post('/', ProductController.createProduct);
 
-router.get('/', authenticateToken, ProductController.getAllProducts);
+// Route to get all Product items
+router.get('/', ProductController.getAllProducts);
 
-router.get('/:id', authenticateToken, ProductController.getProduct);
+// Route to get a specific Product item by ID
+router.get('/:id', ProductController.getProduct);
 
-router.put('/:id', authenticateToken, ProductController.updateProduct);
+// Route to update an existing Product item
+router.put('/:id', ProductController.updateProduct);
 
-router.delete('/:id', authenticateToken, ProductController.deleteProduct);
+// Route to delete an existing Product item
+router.delete('/:id', ProductController.deleteProduct);
 
 module.exports = router;

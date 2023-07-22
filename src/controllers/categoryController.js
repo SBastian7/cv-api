@@ -1,79 +1,90 @@
-const Category = require("../models/category");
-const generateUUIDv4 = require("../utils/generateUUIDv4");
+const Category = require('../models/Category');
 
 class CategoryController {
-  static categories = [];
+  static async createCategory(req, res) {
+    try {
+      const { name } = req.body;
 
-  static createCategory(req, res) {
-    const { name } = req.body;
+      if (!name) {
+        return res.status(400).json({ error: "Category name is a required field" });
+      }
 
-    if (!name) {
-      return res.status(400).json({ error: "Name is a required field" });
+      const newCategory = await Category.create({
+        name: name,
+      });
+
+      res.status(201).json(newCategory);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    // Generate a unique ID (You can use UUID or any other ID generation mechanism here)
-    const id = generateUUIDv4();
-
-    const newCategory = new Category(id, name);
-    CategoryController.categories.push(newCategory);
-
-    res.status(201).json(newCategory);
   }
 
-  static getAllCategories(req, res) {
-    console.log("---> getting cvats ", CategoryController)
-    res.status(200).json(CategoryController.categories);
+  static async getAllCategories(req, res) {
+    try {
+      const categories = await Category.findAll();
+      res.status(200).json(categories);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
-  static getCategory(req, res) {
-    const categoryId = req.params.id;
-    const category = CategoryController.categories.find(
-      (category) => category.id === categoryId
-    );
+  static async getCategory(req, res) {
+    try {
+      const categoryId = req.params.id;
+      const category = await Category.findByPk(categoryId);
 
-    if (!category) {
-      return res.status(404).json({ error: "Category item not found." });
+      if (!category) {
+        return res.status(404).json({ error: "Category not found." });
+      }
+
+      res.status(200).json(category);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    res.status(200).json(category);
   }
 
-  static updateCategory(req, res) {
-    const categoryId = req.params.id;
-    const category = CategoryController.categories.find(
-      (category) => category.id === categoryId
-    );
+  static async updateCategory(req, res) {
+    try {
+      const categoryId = req.params.id;
+      const category = await Category.findByPk(categoryId);
 
-    if (!category) {
-      return res.status(404).json({ error: "Category item not found." });
+      if (!category) {
+        return res.status(404).json({ error: "Category not found." });
+      }
+
+      const { categoryName } = req.body;
+
+      await category.update({
+        name: categoryName,
+      });
+
+      res.status(200).json(category);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    const { categoryName } = req.body;
-
-    if (!categoryName) {
-      return res.status(400).json({ error: "Category Name is a required field" });
-    }
-
-    category.name = categoryName;
-
-    res.status(200).json(category);
   }
 
-  static deleteCategory(req, res) {
-    const categoryId = req.params.id;
-    const index = CategoryController.categories.findIndex(
-      (category) => category.id === categoryId
-    );
+  static async deleteCategory(req, res) {
+    try {
+      const categoryId = req.params.id;
+      const category = await Category.findByPk(categoryId);
 
-    if (index === -1) {
-      return res.status(404).json({ error: "Category item not found." });
+      if (!category) {
+        return res.status(404).json({ error: "Category not found." });
+      }
+
+      await category.destroy();
+
+      res.status(200).json(category);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    const deletedCategory = CategoryController.categories.splice(index, 1);
-    res.status(200).json(deletedCategory[0]);
   }
 }
 
-module.exports = {
-  CategoryController,
-};
+module.exports = CategoryController;
