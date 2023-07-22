@@ -1,22 +1,21 @@
-const path = require('path');
-const express = require('express');
-const dotenv = require('dotenv');
-const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
-
+const express = require('express');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 
+const app = express();
+const path = require('path');
+const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
 
 
-// Import routes
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const productRoutes = require('./routes/productRoutes');
-const docsRouter = require('./routes/documentationRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const docsRouter = require('./routes/documentationRoutes');
 
+// Enviroments
 dotenv.config();
 
 // View Engine
@@ -31,7 +30,6 @@ app.use(morgan('combined'));
 
 // Parse incoming requests with JSON payloads
 app.use(bodyParser.json());
-// Parse incoming requests with urlencoded payloads
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes

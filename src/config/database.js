@@ -2,7 +2,7 @@ const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 
 // Create a new SQLite database instance
-const dbPath = path.resolve(__dirname, "../data/cv.db");
+const dbPath = path.resolve(__dirname, "../data/store.sqlite3");
 const db = new sqlite3.Database(dbPath);
 
 // Create the User table

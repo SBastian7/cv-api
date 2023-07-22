@@ -1,10 +1,9 @@
 const Product = require("../models/product");
+const generateUUIDv4 = require("../utils/generateUUIDv4");
 
 class ProductController {
-  // In-memory data store to simulate the database
   static productItems = [];
 
-  // Static method to create a new Product item
   static createProduct(req, res) {
     const { name, description, quantity, price } = req.body;
 
@@ -18,7 +17,7 @@ class ProductController {
       return res.status(400).json({ error: "Precio es un campo requerido" });
     }
     // Generate a unique ID (You can use UUID or any other ID generation mechanism here)
-    const id = ProductController.generateUniqueID();
+    const id = generateUUIDv4();
 
     const newItem = new Product(id, name, description, quantity, price);
     ProductController.productItems.push(newItem);
@@ -26,12 +25,11 @@ class ProductController {
     res.status(201).json(newItem);
   }
 
-  // Static method to get all Product items
   static getAllProducts(req, res) {
+    console.log("---> getting prods ", ProductController)
     res.status(200).json(ProductController.productItems);
   }
 
-  // Static method to get a specific Product item by ID
   static getProduct(req, res) {
     const itemId = req.params.id;
     const item = ProductController.productItems.find(
@@ -45,7 +43,6 @@ class ProductController {
     res.status(200).json(item);
   }
 
-  // Static method to update an existing Product item
   static updateProduct(req, res) {
     const itemId = req.params.id;
     const item = ProductController.productItems.find(
@@ -77,7 +74,6 @@ class ProductController {
     res.status(200).json(item);
   }
 
-  // Static method to delete an existing Product item
   static deleteProduct(req, res) {
     const itemId = req.params.id;
     const index = ProductController.productItems.findIndex(
@@ -90,11 +86,6 @@ class ProductController {
 
     const deletedItem = ProductController.productItems.splice(index, 1);
     res.status(200).json(deletedItem[0]);
-  }
-
-  // Helper method to generate a unique ID (e.g., you can use UUID or any other ID generation mechanism)
-  static generateUniqueID() {
-    return Math.random().toString(36).substr(2, 9);
   }
 }
 

@@ -1,27 +1,23 @@
 class Category {
-    constructor(id, name) {
-      this.id = id;
-      this.name = name;
-    }
-  
-    // Getter methods
-    getCategoryId() {
-      return this.id;
-    }
-  
-    getCategoryName() {
-      return this.name;
-    }
-  
-    // Setter methods
-    setCategoryId(id) {
-      this.id = id;
-    }
-  
-    setCategoryName(name) {
-      this.name = name;
-    }
+  constructor(id, name, category, quantity, price) {
+    this.id = id;
+    this.name = name;
   }
-  
-  module.exports = Category;
-  
+
+  // Getter methods
+  getId() {
+    return this.id;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  // Setter methods
+  setName(name) {
+    this.name = name;
+  }
+
+}
+
+module.exports = Category;
