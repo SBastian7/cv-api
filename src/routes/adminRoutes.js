@@ -12,29 +12,6 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-// Admin Dashboard - GET
-router.get('/', isAdmin, (req, res) => {
-  // Render the admin dashboard view
-  res.render('adminLogin', { pageTitle: 'Admin Dashboard' });
-});
-
-router.get('/dashboard', isAdmin, UserController.getAllUsers);
-
-router.get('/dashboard/users/:id', isAdmin, UserController.getUserById);
-
-
 router.post('/login', isAdmin, UserController.loginAdmin);
-
-// Users List - GET
-router.get('/users', isAdmin, UserController.getAllUsers);
-
-// Create User - POST
-router.post('/users', isAdmin, UserController.createUser);
-
-// Update User - PUT
-router.put('/users/:id', isAdmin, UserController.updateUser);
-
-// Delete User - DELETE
-router.delete('/users/:id', isAdmin, UserController.deleteUser);
 
 module.exports = router;
