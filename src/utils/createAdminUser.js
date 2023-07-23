@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
-const db = require('../config/database');
+const User = require('../models/User');
 
 const adminUser = {
   username: 'admin',
@@ -9,33 +8,32 @@ const adminUser = {
   isAdmin: true,
 };
 
-// Check if the admin user already exists
-db.get('SELECT * FROM User WHERE email = ? AND isAdmin = 1', [adminUser.email], async (err, existingAdminUser) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  // If the admin user doesn't exist, create it
-  if (!existingAdminUser) {
-    bcrypt.genSalt(10, async (err, salt) => {
+const createAdminUser = async () => {
+  try {
+    // Check if the admin user already exists
+    const existingAdminUser = await User.findOne({
+      where: { email: adminUser.email, isAdmin: true },
+    });
+
+    if (!existingAdminUser) {
+      // Generate a salt and hash the password
+      const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(adminUser.password, salt);
 
-      const newAdminUser = {
+      // Create the new admin user with hashed password
+      const newAdminUser = await User.create({
         ...adminUser,
         password: hashedPassword,
-      };
+      });
 
-      User.createUser(newAdminUser, (err, userId) => {
-        if (err) {
-          console.error(err);
-          process.exit(1);
-        }
-        console.log('Admin user created successfully.');
-        process.exit(0);
-      });   
-    })
-  } else {
-    console.log('Admin user already exists.');
-    process.exit(0);
+      console.log('Admin user created successfully.');
+    } else {
+      console.log('Admin user already exists.');
+    }
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
   }
-});
+};
+
+createAdminUser();

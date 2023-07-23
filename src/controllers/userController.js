@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 class UserController {
   static async createUser(req, res) {
@@ -105,10 +107,10 @@ class UserController {
   static async loginAdmin(req, res) {
     const { email, password } = req.body;
     if (!email) {
-      return res.status(500).json({ error: "Email is required" });
+      return res.status(500).json({ message: "Email is required" });
     }
     if (!password) {
-      return res.status(500).json({ error: "Password is required" });
+      return res.status(500).json({ message: "Password is required" });
     }
 
     // Check if the email exists in the database
@@ -117,16 +119,16 @@ class UserController {
 
       if (!user || !user.isAdmin) {
         // Admin not found or not an admin user
-        return res.status(401).json({ error: "Credenciales incorrectas." });
+        return res.status(401).json({ message: "Credenciales incorrectas." });
       }
 
       const isPasswordMatch = await bcrypt.compare(password, user.password);
 
       if (!isPasswordMatch) {
-        return res.status(401).json({ error: "Credenciales incorrectas." });
+        return res.status(401).json({ message: "Credenciales incorrectas." });
       }
 
-      const token = jwt.sign({ id: user.id, isAdmin: true }, secretKey, {
+      const token = jwt.sign({ id: user.id, isAdmin: true }, process.env.SECRET_KEY, {
         expiresIn: "24h", // Set the token expiration time (e.g., 1 hour)
       });
 
@@ -134,7 +136,7 @@ class UserController {
       res.json({ token });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 }
