@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 class ProductController {
   static async createProduct(req, res) {
     try {
-      const { name, description, quantity, price, category } = req.body;
+      const { name, description, quantity, price, categoryId } = req.body;
 
       if (!name) {
         return res.status(400).json({ error: "Name is a required field" });
@@ -14,7 +14,7 @@ class ProductController {
       if (!price) {
         return res.status(400).json({ error: "Price is a required field" });
       }
-      if (!category) {
+      if (!categoryId) {
         return res.status(400).json({ error: "Category is a required field" });
       }
 
@@ -23,7 +23,7 @@ class ProductController {
         description,
         quantity,
         price,
-        category,
+        categoryId,
       });
 
       res.status(201).json(newProduct);
@@ -99,8 +99,10 @@ class ProductController {
       }
 
       await product.destroy();
+      
+      const productList = await Product.findAll();
 
-      res.status(200).json(product);
+      res.status(200).json(productList);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal server error' });
