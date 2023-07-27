@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database'); // Assuming you've already set up the Sequelize instance
 
-const Category = require('./Category'); // Import the Category model
+const Category = require('./categoryModel'); // Import the Category model
 
 const Product = sequelize.define('Product', {
   id: {
