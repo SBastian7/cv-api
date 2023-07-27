@@ -35,7 +35,7 @@ app.use('/products', productRoutes);
 app.use('/category', categoryRoutes);
 
 app.get('/', (req, res) => {
-    res.send('Welcome');
+    res.send('Welcome API Tribu');
 });
 
 
