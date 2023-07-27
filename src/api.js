@@ -1,12 +1,10 @@
 const cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
-const serverless = require('serverless-http');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 
 const app = express();
 const path = require('path');
-const router = express.Router();
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 
@@ -44,9 +42,6 @@ app.use('/category', categoryRoutes);
 app.get('/', (req, res) => {
     res.send('Welcome');
 });
-app.use('/.netlify/functions/api', router)
-
 
 
 module.exports = app;
-module.exports.handler = serverless(app);
