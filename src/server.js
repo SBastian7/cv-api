@@ -1,4 +1,4 @@
-const app = require('./app');
+const app = require('./api');
 const { sequelize, testConnection } = require('./config/database'); // Import the Sequelize instance and testConnection function
 const port = process.env.PORT || 4200;
 

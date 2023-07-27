@@ -6,10 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "build": "netlify deploy --prod",
-    "setup": "node src/utils/createAdminUser.js",
-    "start:netly": "./node_modules/.bin/netlify-lambda serve src",
-    "build:netly": "./node_modules/.bin/netlify-lambda build src"
+    "setup": "node src/utils/createAdminUser.js"
   },
   "keywords": [],
   "author": "",

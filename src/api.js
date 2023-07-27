@@ -41,11 +41,12 @@ app.use('/admin', adminRoutes);
 app.use('/products', productRoutes);
 app.use('/category', categoryRoutes);
 
-app.use('/.netlify/src/app', router)
-
 app.get('/', (req, res) => {
     res.send('Welcome');
 });
+app.use('/.netlify/functions/api', router)
 
 
+
+module.exports = app;
 module.exports.handler = serverless(app);
