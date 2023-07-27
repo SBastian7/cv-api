@@ -1,10 +1,12 @@
 const cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
+const serverless = require('serverless-http');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 
 const app = express();
 const path = require('path');
+const router = express.Router();
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 
@@ -39,11 +41,11 @@ app.use('/admin', adminRoutes);
 app.use('/products', productRoutes);
 app.use('/category', categoryRoutes);
 
-// Error handling middleware
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).json({ error: 'Internal Server Error' });
-// });
+app.use('/.netlify/src/app', router)
+
+app.get('/', (req, res) => {
+    res.send('Welcome');
+});
 
 
-module.exports = app;
+module.exports.handler = serverless(app);
