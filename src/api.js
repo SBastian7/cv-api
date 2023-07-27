@@ -8,7 +8,6 @@ const path = require('path');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 
-
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const productRoutes = require('./routes/productRoutes');
@@ -17,10 +16,6 @@ const docsRouter = require('./routes/documentationRoutes');
 
 // Enviroments
 dotenv.config();
-
-// View Engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
 // Middleware
 app.use(cors());
