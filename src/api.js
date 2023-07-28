@@ -1,11 +1,11 @@
+require('dotenv').config();
+
 const cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 
 const app = express();
-const path = require('path');
-const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/userRoutes');
@@ -14,8 +14,6 @@ const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const docsRouter = require('./routes/documentationRoutes');
 
-// Enviroments
-dotenv.config();
 
 // Middleware
 app.use(cors());

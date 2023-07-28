@@ -1,14 +1,18 @@
 const { Sequelize } = require('sequelize');
-const path = require('path');
 
-const databasePath = path.join(__dirname, '../data/store.sqlite3');
+const connectionString = process.env.DATABASE_URI || 'postgres://admin:ow4mnpyJPY4t48Q3MiZt2RQwaHA1988B@dpg-cj0uhf5ph6enmk6enong-a.oregon-postgres.render.com/tribu';
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: databasePath,
+const sequelize = new Sequelize(connectionString, {
+  dialect: 'postgres',
+  protocol: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, // Add this line if you're using self-signed certificates or running on a local development environment without SSL
+    },
+  },
 });
 
-// Test the database connection
 async function testConnection() {
   try {
     await sequelize.authenticate();
@@ -18,7 +22,6 @@ async function testConnection() {
   }
 }
 
-// Export the Sequelize instance and the testConnection function
 module.exports = {
   sequelize,
   testConnection,
