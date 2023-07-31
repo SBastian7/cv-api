@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "setup": "node src/utils/createAdminUser.js"
+    "setup": "node src/utils/createAdminUser.js",
+    "setup:categories": "node src/utils/createCategories.js"
   },
   "keywords": [],
   "author": "",
