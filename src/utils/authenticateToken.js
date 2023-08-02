@@ -10,7 +10,7 @@ const authenticateToken = (req, res, next) => {
   const authToken = token.split(' ')[1];
 
   // Replace 'YOUR_SECRET_KEY' with your actual JWT secret key used to sign the token
-  jwt.verify(authToken, 'your_secret_key', (err, user) => {
+  jwt.verify(authToken, process.env.SECRET_KEY, (err, user) => {
     if (err) {
       return res.status(403).json({ error: 'Forbidden' });
     }
