@@ -32,5 +32,9 @@ const OutcomeProduct = sequelize.define('OutcomeProduct', {
   
   Outcome.belongsToMany(Product, { through: OutcomeProduct });
   Product.belongsToMany(Outcome, { through: OutcomeProduct });
+  Outcome.belongsTo(User, {
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+  });
 
 module.exports = { Outcome, OutcomeProduct };

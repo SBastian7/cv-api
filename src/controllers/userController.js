@@ -29,7 +29,7 @@ class UserController {
 
   static async getAllUsers(req, res) {
     try {
-      const users = await User.getAllUsers();
+      const users = await User.findAll();
       res.status(200).json(users);
     } catch (error) {
       console.error(error);
@@ -40,7 +40,7 @@ class UserController {
   static async getUser(req, res) {
     try {
       const userId = req.params.id;
-      const user = await User.getUserById(userId);
+      const user = await User.findByPk(userId);
 
       if (!user) {
         return res.status(404).json({ error: "User not found." });
