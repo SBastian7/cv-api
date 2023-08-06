@@ -1,4 +1,4 @@
-const { Outcome, OutcomeProduct } = require("../models/outcomeModel");
+const { Outcome, OutcomeProduct, OutcomeType } = require("../models/outcomeModel");
 const Product = require("../models/productModel");
 const User = require("../models/userModel");
 
@@ -19,13 +19,14 @@ class OutcomeController {
     try {
       const { type, description, userId, products, price } = req.body;
 
+      const outcomeType = await OutcomeType.findByPk(type);
       // Make sure the 'type' field is either 'service' or 'product'
-      if (!["service", "product"].includes(type)) {
+      if (!outcomeType) {
         return res
           .status(400)
           .json({
             error:
-              "Invalid outcome type. Type should be 'service' or 'product'.",
+              "Invalid outcome type.",
           });
       }
 
@@ -46,7 +47,7 @@ class OutcomeController {
       );
 
       const newOutcome = await Outcome.create({
-        type: type,
+        outcomeType: outcomeType.dataValues.id,
         description: description,
         userId: user.dataValues.id,
         price: price,
@@ -59,8 +60,13 @@ class OutcomeController {
           ProductId: product.id,
           count: product.count,
         });
+        const productToUpdate = await Product.findByPk(product.id);
+        productToUpdate.set('quantity', Number(productToUpdate.dataValues.quantity) + Number(product.count));
+        productToUpdate.save();
       });
       await OutcomeProduct.bulkCreate(formattedBulk);
+
+
 
       res.status(201).json(newOutcome);
     } catch (error) {
@@ -72,14 +78,18 @@ class OutcomeController {
   static async getAllOutcomes(req, res) {
     try {
       const outcomes = await Outcome.findAll({
-        attributes: ["id", "type", "description", "price", "userId"],
+        attributes: ["id", "description", "price", "userId"],
         include: [
           {
             model: Product,
-            attributes: ["id"],
+            attributes: ["id", "name"],
             through: {
               attributes: ["count", "ProductId"],
             },
+          },
+          {
+            model: OutcomeType,
+            attributes: ["id", "name"],
           },
         ],
       });
@@ -99,7 +109,7 @@ class OutcomeController {
     try {
       const outcomeId = req.params.id;
       const outcome = await Outcome.findByPk(outcomeId, {
-        attributes: ["id", "type", "description", "price", "userId"],
+        attributes: ["id", "outcomeType", "description", "price", "userId"],
         include: [
           {
             model: Product,
@@ -184,6 +194,16 @@ class OutcomeController {
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  static async getOutcomeTypes(req, res) {
+    try {
+      const outcomes = await OutcomeType.findAll();
+      res.status(200).json(outcomes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   }
 }

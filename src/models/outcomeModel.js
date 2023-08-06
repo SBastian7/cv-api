@@ -10,10 +10,6 @@ const Outcome = sequelize.define('Outcome', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  type: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   description: {
     type: DataTypes.STRING,
   },
@@ -21,6 +17,18 @@ const Outcome = sequelize.define('Outcome', {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
+});
+
+const OutcomeType = sequelize.define('OutcomeType', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
 });
 
 const OutcomeProduct = sequelize.define('OutcomeProduct', {
@@ -36,5 +44,9 @@ const OutcomeProduct = sequelize.define('OutcomeProduct', {
     foreignKey: 'userId',
     onDelete: 'CASCADE',
   });
+  Outcome.belongsTo(OutcomeType, {
+    foreignKey: 'outcomeType',
+    onDelete: 'CASCADE',
+  });
 
-module.exports = { Outcome, OutcomeProduct };
+module.exports = { Outcome, OutcomeProduct, OutcomeType };
