@@ -78,7 +78,7 @@ class OutcomeController {
   static async getAllOutcomes(req, res) {
     try {
       const outcomes = await Outcome.findAll({
-        attributes: ["id", "description", "price", "userId"],
+        attributes: ["id", "description", "price", "userId", "createdAt"],
         include: [
           {
             model: Product,

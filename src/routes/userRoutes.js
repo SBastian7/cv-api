@@ -3,6 +3,8 @@ const router = express.Router();
 const UserController = require('../controllers/userController');
 const authenticateToken = require('../utils/authenticateToken');
 
+router.get('/clients', authenticateToken, UserController.getAllClients);
+
 router.get('/', authenticateToken, UserController.getAllUsers);
 
 router.get('/:id', authenticateToken, UserController.getUser);

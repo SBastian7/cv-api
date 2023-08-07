@@ -1,3 +1,4 @@
+const Category = require('../models/categoryModel');
 const Product = require('../models/productModel');
 
 class ProductController {
@@ -36,7 +37,15 @@ class ProductController {
   // Static method to get all Product items
   static async getAllProducts(req, res) {
     try {
-      const products = await Product.findAll();
+      const products = await Product.findAll({
+        attributes: ["id", "name", "description", "quantity", "price", "createdAt"],
+        include: [
+          {
+            model: Category,
+            attributes: ["id", "name"],
+          }
+        ]
+      });
       res.status(200).json(products);
     } catch (error) {
       console.error(error);

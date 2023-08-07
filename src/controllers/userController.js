@@ -5,19 +5,21 @@ const jwt = require('jsonwebtoken');
 class UserController {
   static async createUser(req, res) {
     try {
-      const { username, email, password, isAdmin } = req.body;
+      const { username, name, email, phone } = req.body;
 
-      if (!username || !email || !password) {
+      if (!username || !email || !name) {
         return res
           .status(400)
-          .json({ error: "Username, email, and password are required fields" });
+          .json({ error: "Id, name and email are required fields" });
       }
 
-      const newUser = await User.createUser({
+      const newUser = await User.create({
         username,
+        name,
         email,
-        password,
-        isAdmin: isAdmin ? true : false,
+        phone,
+        isAdmin: false,
+        isStaff: false,
       });
 
       res.status(201).json(newUser);
@@ -30,6 +32,22 @@ class UserController {
   static async getAllUsers(req, res) {
     try {
       const users = await User.findAll();
+      res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  static async getAllClients(req, res) {
+    const queryOptions = {
+      where: {
+        isAdmin: false,
+        isStaff: false,
+      }
+    }
+    try {
+      const users = await User.findAll(queryOptions);
       res.status(200).json(users);
     } catch (error) {
       console.error(error);
@@ -117,7 +135,7 @@ class UserController {
     try {
       const user = await UserController.getUserByEmail(email);
 
-      if (!user || !user.isAdmin) {
+      if (!(user || user.isAdmin)) {
         // Admin not found or not an admin user
         return res.status(401).json({ message: "Credenciales incorrectas." });
       }
@@ -128,9 +146,7 @@ class UserController {
         return res.status(401).json({ message: "Credenciales incorrectas." });
       }
 
-      const token = jwt.sign({ id: user.id, isAdmin: true }, process.env.SECRET_KEY, {
-        expiresIn: "24h", // Set the token expiration time (e.g., 1 hour)
-      });
+      const token = jwt.sign({ id: user.id, isAdmin: true }, process.env.SECRET_KEY, {});
 
       // Send the token in the response
       res.json({ token });

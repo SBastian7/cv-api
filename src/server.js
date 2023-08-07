@@ -9,8 +9,9 @@ async function initializeServer() {
     await testConnection();
 
     // Synchronize the models with the database
+    // await sequelize.sync({ alter: true });
     await sequelize.sync();
-    console.log('Database synchronized successfully.');
+    // console.log('Database synchronized successfully.');
 
     // Start the server
     app.listen(port, () => {
