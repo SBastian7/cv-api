@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const incomeRoutes = require('./routes/incomeRoutes');
 const outcomeRoutes = require('./routes/outcomeRoutes');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -30,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/docs', docsRouter);
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/income', incomeRoutes);
 app.use('/outcome', outcomeRoutes);
 app.use('/products', productRoutes);
 app.use('/category', categoryRoutes);
