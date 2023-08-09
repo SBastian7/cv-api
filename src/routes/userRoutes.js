@@ -5,6 +5,8 @@ const authenticateToken = require('../utils/authenticateToken');
 
 router.get('/clients', authenticateToken, UserController.getAllClients);
 
+router.get('/clients/:id', authenticateToken, UserController.getClient);
+
 router.get('/', authenticateToken, UserController.getAllUsers);
 
 router.get('/:id', authenticateToken, UserController.getUser);

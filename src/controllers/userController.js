@@ -55,6 +55,24 @@ class UserController {
     }
   }
 
+  static async getClient(req, res) {
+    const userId = req.params.id;
+    const queryOptions = {
+      where: {
+        isAdmin: false,
+        isStaff: false,
+        id: userId,
+      }
+    }
+    try {
+      const user = await User.findOne(queryOptions);
+      res.status(200).json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
   static async getUser(req, res) {
     try {
       const userId = req.params.id;
@@ -74,20 +92,21 @@ class UserController {
   static async updateUser(req, res) {
     try {
       const userId = req.params.id;
-      const { username, email, password, isAdmin } = req.body;
+      const { name, email, phone } = req.body;
 
-      const updatedUser = await User.updateUser(userId, {
-        username,
-        email,
-        password,
-        isAdmin: isAdmin ? true : false,
-      });
-
-      if (updatedUser[0] === 0) {
+      const userToUpdate = await User.findByPk(userId);
+      
+      if (!userToUpdate) {
         return res.status(404).json({ error: "User not found." });
       }
 
-      res.status(200).json({ message: "User updated successfully." });
+      await userToUpdate.update({
+        name,
+        email,
+        phone,
+      });
+
+      res.status(200).json(userToUpdate);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal server error" });
@@ -97,12 +116,13 @@ class UserController {
   static async deleteUser(req, res) {
     try {
       const userId = req.params.id;
-      const deletedUser = await User.deleteUser(userId);
-
-      if (!deletedUser) {
+      const userToDelete = await User.findByPk(userId);
+      
+      if (!userToDelete) {
         return res.status(404).json({ error: "User not found." });
       }
 
+      const deletedUser = userToDelete.destroy();
       res.status(200).json(deletedUser);
     } catch (error) {
       console.error(error);
