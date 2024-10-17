@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-const connectionString = process.env.DATABASE_URI || 'postgres://admin:ow4mnpyJPY4t48Q3MiZt2RQwaHA1988B@dpg-cj0uhf5ph6enmk6enong-a.oregon-postgres.render.com/tribu';
+const connectionString = process.env.DATABASE_URI || 'postgresql://inventory_db_j3t5_user:NAPtesw3SpPIhSmF1IrHgvgzvdGt4wno@dpg-cs8okrtds78s738ivol0-a.oregon-postgres.render.com/inventory_db_j3t5';
 
 const sequelize = new Sequelize(connectionString, {
   dialect: 'postgres',
